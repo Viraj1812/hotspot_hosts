@@ -1,0 +1,12 @@
+{
+    "dart.lineLength": 120,
+    "dart.flutterSdkPath": "/Users/virajvasani/Documents/Flutter/3.35.1/flutter",
+    "cmake.configureOnOpen": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.organizeImports": "always"
+    },
+    "a-file-icon-vscode.arrowTheme": "material",
+}

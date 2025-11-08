@@ -1,0 +1,15 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        //* Hotspot Hosts
+        {
+            "name": "Hotspot Hosts",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-t",
+                "lib/main.dart",
+            ]
+        }
+    ]
+}
