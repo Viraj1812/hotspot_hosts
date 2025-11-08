@@ -9,4 +9,7 @@
         "source.organizeImports": "always"
     },
     "a-file-icon-vscode.arrowTheme": "material",
+    "cSpell.words": [
+        "hotspot"
+    ],
 }

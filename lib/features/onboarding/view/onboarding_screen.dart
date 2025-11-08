@@ -1,15 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hotspot_hosts/widgets/app_scaffold_with_background.dart';
 
-class OnboardingScreen extends StatefulWidget {
+@RoutePage()
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return AppScaffoldWithBackground(body: Center(child: Text('Onboarding')));
   }
 }
