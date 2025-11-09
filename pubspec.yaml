@@ -61,6 +61,14 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/fonts/
+  fonts:
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Bold.ttf
+        - asset: assets/fonts/SpaceGrotesk-Light.ttf
+        - asset: assets/fonts/SpaceGrotesk-Regular.ttf
+        - asset: assets/fonts/SpaceGrotesk-Medium.ttf
+        - asset: assets/fonts/SpaceGrotesk-SemiBold.ttf
 
 flutter_gen:
   output: lib/config/assets/ # Optional (default: lib/gen/)

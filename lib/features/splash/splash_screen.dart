@@ -3,8 +3,10 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hotspot_hosts/config/assets/assets.gen.dart';
 import 'package:hotspot_hosts/config/assets/colors.gen.dart';
+import 'package:hotspot_hosts/features/onboarding/controller/onboarding_state_notifier.dart';
 import 'package:hotspot_hosts/helpers/auto_route_navigation.dart';
 import 'package:hotspot_hosts/routes/app_router.dart';
 
@@ -28,6 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
       Future.delayed(const Duration(milliseconds: 1600), () async {
         AutoRouteNavigation.pushAndReplace(const OnboardingRoute());
       });
+      final ref = ProviderScope.containerOf(context);
+      ref.read(onboardingStateNotifierProvider.notifier).getExperienceList();
     });
   }
 

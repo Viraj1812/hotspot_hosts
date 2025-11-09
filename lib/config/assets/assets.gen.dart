@@ -21,6 +21,34 @@ class $AssetsColorsGen {
   List<String> get values => [colors];
 }
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  /// File path: assets/fonts/SpaceGrotesk-Bold.ttf
+  String get spaceGroteskBold => 'assets/fonts/SpaceGrotesk-Bold.ttf';
+
+  /// File path: assets/fonts/SpaceGrotesk-Light.ttf
+  String get spaceGroteskLight => 'assets/fonts/SpaceGrotesk-Light.ttf';
+
+  /// File path: assets/fonts/SpaceGrotesk-Medium.ttf
+  String get spaceGroteskMedium => 'assets/fonts/SpaceGrotesk-Medium.ttf';
+
+  /// File path: assets/fonts/SpaceGrotesk-Regular.ttf
+  String get spaceGroteskRegular => 'assets/fonts/SpaceGrotesk-Regular.ttf';
+
+  /// File path: assets/fonts/SpaceGrotesk-SemiBold.ttf
+  String get spaceGroteskSemiBold => 'assets/fonts/SpaceGrotesk-SemiBold.ttf';
+
+  /// List of all assets
+  List<String> get values => [
+    spaceGroteskBold,
+    spaceGroteskLight,
+    spaceGroteskMedium,
+    spaceGroteskRegular,
+    spaceGroteskSemiBold,
+  ];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -38,6 +66,7 @@ class AppAssets {
   const AppAssets._();
 
   static const $AssetsColorsGen colors = $AssetsColorsGen();
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
