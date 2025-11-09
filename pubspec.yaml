@@ -58,7 +58,6 @@ dependency_overrides:
 flutter:
   uses-material-design: true
   assets:
-    - assets/json/onboarding_questions.json
     - assets/colors/
     - assets/icons/
     - assets/images/
