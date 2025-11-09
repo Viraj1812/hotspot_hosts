@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:hotspot_hosts/features/onboarding/view/onboarding_screen.dart';
-import 'package:hotspot_hosts/features/splash/splash_screen.dart';
+import 'package:hotspot_hosts/features/splash/view/splash_screen.dart';
 
 part 'app_router.gr.dart';
 

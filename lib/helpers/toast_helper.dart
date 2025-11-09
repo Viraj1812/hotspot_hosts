@@ -33,7 +33,7 @@ class AppToastHelper {
         showProgressBar: false,
         description: Text(
           message,
-          style: AppStyles.getRegularStyle(color: AppColors.white),
+          style: AppStyles.getRegularStyle(color: AppColors.black),
           maxLines: 5,
           overflow: TextOverflow.ellipsis,
         ),

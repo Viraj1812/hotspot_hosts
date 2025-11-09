@@ -33,10 +33,6 @@ class ApiHelper {
       queryParams: queryParams,
       isAuthorization: isAuthorization,
       cancelToken: cancelToken,
-      mixPanelEventModel: MixPanelEventModel(
-        successData: {'successMessage': 'GET API Success', 'url': url},
-        errorData: {'errorMessage': 'GET API Error', 'url': url},
-      ),
     );
 
     final result = await _getResponse(
@@ -68,10 +64,6 @@ class ApiHelper {
       queryParams: queryParams,
       isAuthorization: isAuthorization,
       cancelToken: cancelToken,
-      mixPanelEventModel: MixPanelEventModel(
-        successData: {'successMessage': 'POST API Success', 'url': url},
-        errorData: {'errorMessage': 'POST API Error', 'url': url},
-      ),
     );
 
     final result = await _getResponse(
@@ -102,10 +94,6 @@ class ApiHelper {
       queryParams: queryParams,
       isAuthorization: isAuthorization,
       cancelToken: cancelToken,
-      mixPanelEventModel: MixPanelEventModel(
-        successData: {'successMessage': 'PATCH API Success', 'url': url},
-        errorData: {'errorMessage': 'PATCH API Error', 'url': url},
-      ),
     );
 
     final result = await _getResponse(
@@ -136,10 +124,6 @@ class ApiHelper {
       queryParams: queryParams,
       isAuthorization: isAuthorization,
       cancelToken: cancelToken,
-      mixPanelEventModel: MixPanelEventModel(
-        successData: {'successMessage': 'PUT API Success', 'url': url},
-        errorData: {'errorMessage': 'PUT API Error', 'url': url},
-      ),
     );
 
     final result = await _getResponse(

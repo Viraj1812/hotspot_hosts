@@ -62,12 +62,23 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [bg, logo];
 }
 
+class $AssetsJsonGen {
+  const $AssetsJsonGen();
+
+  /// File path: assets/json/onboarding_questions.json
+  String get onboardingQuestions => 'assets/json/onboarding_questions.json';
+
+  /// List of all assets
+  List<String> get values => [onboardingQuestions];
+}
+
 class AppAssets {
   const AppAssets._();
 
   static const $AssetsColorsGen colors = $AssetsColorsGen();
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsJsonGen json = $AssetsJsonGen();
 }
 
 class AssetGenImage {

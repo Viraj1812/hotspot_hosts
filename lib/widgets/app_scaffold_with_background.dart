@@ -6,18 +6,26 @@ import 'package:hotspot_hosts/config/assets/assets.gen.dart';
 import 'package:hotspot_hosts/config/assets/colors.gen.dart';
 
 class AppScaffoldWithBackground extends ConsumerWidget {
-  const AppScaffoldWithBackground({this.body, this.appBar, this.bottomNavigationBar, this.bottomButton, super.key});
+  const AppScaffoldWithBackground({
+    this.body,
+    this.appBar,
+    this.bottomNavigationBar,
+    this.bottomButton,
+    this.resizeToAvoidBottomInset,
+    super.key,
+  });
 
   final Widget? body;
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
   final Widget? bottomButton;
+  final bool? resizeToAvoidBottomInset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.transparent,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset ?? false,
       extendBody: true,
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,

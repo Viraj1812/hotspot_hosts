@@ -8,5 +8,5 @@ class APIEndpoints {
   static String get baseUrl => 'https://staging.chamberofsecrets.8club.co/v1';
 
   //* GET Experience List
-  static String get getExperienceList => '$baseUrl/experiences?active=true';
+  static String get getExperienceList => '$baseUrl/experiences';
 }

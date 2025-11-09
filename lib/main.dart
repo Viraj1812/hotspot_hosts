@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hotspot_hosts/config/assets/colors.gen.dart';
 import 'package:hotspot_hosts/routes/app_route_handler.dart';
 import 'package:toastification/toastification.dart';
 
@@ -15,33 +13,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.black, // Color for Android
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: AppColors.black,
-        systemNavigationBarDividerColor: AppColors.black,
-        systemNavigationBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light, // light == black status bar for IOS.
-      ),
-      child: ToastificationWrapper(
-        child: ProviderScope(
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              builder: (context, child) => MediaQuery(
-                data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  child: child ?? SizedBox.shrink(),
-                ),
+    return ToastificationWrapper(
+      child: ProviderScope(
+        child: MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+              child: GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: child ?? SizedBox.shrink(),
               ),
-              scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
-              routerConfig: AppRouteHandler.route.config(),
             ),
+            scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
+            routerConfig: AppRouteHandler.route.config(),
           ),
         ),
       ),

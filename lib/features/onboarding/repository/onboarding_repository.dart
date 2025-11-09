@@ -19,6 +19,8 @@ class OnboardingRepository implements IOnboardingRepository {
       final response = await ApiHelper.instance.get(
         url: APIEndpoints.getExperienceList,
         fromJson: (data) => ExperienceResponseDataModel.fromJson(data as Map<String, dynamic>? ?? {}),
+        queryParams: {'active': 'true'},
+        isAuthorization: false,
       );
 
       return AppUtils.handleApiResponse<List<Experiences>>(
