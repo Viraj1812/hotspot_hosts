@@ -5,7 +5,8 @@ class OnboardingState {
     required this.isLoading,
     required this.experienceList,
     required this.selectedExperiences,
-    required this.description,
+    required this.descriptionScreenOne,
+    required this.descriptionScreenTwo,
   });
 
   OnboardingState.initial();
@@ -13,19 +14,22 @@ class OnboardingState {
   bool isLoading = false;
   List<Experiences> experienceList = [];
   List<Experiences> selectedExperiences = [];
-  String description = '';
+  String descriptionScreenOne = '';
+  String descriptionScreenTwo = '';
 
   OnboardingState copyWith({
     bool? isLoading,
     List<Experiences>? experienceList,
     List<Experiences>? selectedExperiences,
-    String? description,
+    String? descriptionScreenOne,
+    String? descriptionScreenTwo,
   }) {
     return OnboardingState(
       isLoading: isLoading ?? this.isLoading,
       experienceList: experienceList ?? this.experienceList,
       selectedExperiences: selectedExperiences ?? this.selectedExperiences,
-      description: description ?? this.description,
+      descriptionScreenOne: descriptionScreenOne ?? this.descriptionScreenOne,
+      descriptionScreenTwo: descriptionScreenTwo ?? this.descriptionScreenTwo,
     );
   }
 }

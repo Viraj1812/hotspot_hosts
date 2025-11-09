@@ -151,10 +151,11 @@ class _SelectionPageWidgetState extends ConsumerState<SelectionPageWidget> {
                     child: TextFormField(
                       controller: _textController,
                       onChanged: (value) {
-                        ref.read(onboardingStateNotifierProvider.notifier).updateDescription(value);
+                        ref.read(onboardingStateNotifierProvider.notifier).updateDescriptionScreenOne(value);
                       },
                       maxLines: 6,
                       maxLength: 250,
+                      textInputAction: TextInputAction.done,
                       style: const TextStyle(color: AppColors.white),
                       decoration: InputDecoration(
                         hintText: widget.question['placeholder'],

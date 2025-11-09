@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hotspot_hosts/routes/app_route_handler.dart';
 
 BuildContext get globalContext => AutoRouteNavigation.currentContext!;
@@ -16,6 +17,8 @@ class AutoRouteNavigation {
   static void back([Object? result]) {
     if (_router.canPop()) {
       _router.pop(result);
+    } else {
+      SystemNavigator.pop();
     }
   }
 

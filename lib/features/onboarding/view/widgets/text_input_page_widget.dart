@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hotspot_hosts/config/assets/colors.gen.dart';
+import 'package:hotspot_hosts/constants/app_styles.dart';
 import 'package:hotspot_hosts/features/onboarding/controller/onboarding_state_notifier.dart';
+import 'package:hotspot_hosts/features/onboarding/view/widgets/action_buttons_widget.dart';
+import 'package:hotspot_hosts/features/onboarding/view/widgets/recorded_file_widget.dart';
+import 'package:hotspot_hosts/features/onboarding/view/widgets/recording_in_progress_widget.dart';
+import 'package:hotspot_hosts/helpers/auto_route_navigation.dart';
+import 'package:hotspot_hosts/helpers/toast_helper.dart';
+import 'package:hotspot_hosts/routes/app_router.dart';
+import 'package:hotspot_hosts/services/audio_service.dart';
+import 'package:hotspot_hosts/services/video_service.dart';
 
 class TextInputPageWidget extends ConsumerStatefulWidget {
   final Map<String, dynamic> question;
@@ -15,209 +24,182 @@ class TextInputPageWidget extends ConsumerStatefulWidget {
 
 class _TextInputPageWidgetState extends ConsumerState<TextInputPageWidget> {
   final TextEditingController _textController = TextEditingController();
-  final ValueNotifier<bool> _isRecordingNotifier = ValueNotifier(false);
+  final AudioService _audioService = AudioService();
+  final VideoService _videoService = VideoService();
 
   @override
   void dispose() {
     _textController.dispose();
-    _isRecordingNotifier.dispose();
+    _audioService.dispose();
+    _videoService.dispose();
     super.dispose();
   }
 
-  void _toggleRecording() {
-    _isRecordingNotifier.value = !_isRecordingNotifier.value;
+  Future<void> _startAudioRecording() async {
+    final success = await _audioService.startRecording();
+    if (!success && mounted) {
+      AppToastHelper.showError('Failed to start recording. Please check permissions.');
+    }
+  }
+
+  Future<void> _stopAudioRecording() async {
+    await _audioService.stopRecording();
+  }
+
+  Future<void> _startVideoRecording() async {
+    final path = await _videoService.recordVideo();
+    if (path == null && mounted) {
+      AppToastHelper.showError('Video recording cancelled or failed');
+    }
+  }
+
+  Future<void> _toggleAudioPlayback(String filePath) async {
+    final success = await _audioService.togglePlayback(filePath);
+    if (!success && mounted) {
+      AppToastHelper.showError('Failed to play audio');
+    }
+  }
+
+  Future<void> _playVideo(String filePath) async {
+    try {
+      if (mounted) {
+        AutoRouteNavigation.push(VideoPlayerRoute(videoPath: filePath));
+      }
+    } catch (e) {
+      debugPrint('Error opening video: $e');
+      if (mounted) {
+        AppToastHelper.showError('Failed to play video: $e');
+      }
+    }
+  }
+
+  void _deleteRecording() {
+    if (_audioService.recordedFilePath.value != null) {
+      _audioService.reset();
+    }
+    if (_videoService.recordedVideoPath.value != null) {
+      _videoService.reset();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: _isRecordingNotifier,
+      valueListenable: _audioService.isRecording,
       builder: (context, isRecording, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 16),
-            _buildTextInputArea(),
-            if (isRecording) _buildRecordingSection(),
-            _buildBottomActions(isRecording),
-          ],
+        return ValueListenableBuilder<String?>(
+          valueListenable: _audioService.recordedFilePath,
+          builder: (context, audioFilePath, _) {
+            return ValueListenableBuilder<String?>(
+              valueListenable: _videoService.recordedVideoPath,
+              builder: (context, videoFilePath, _) {
+                final recordedFilePath = audioFilePath ?? videoFilePath;
+                final isVideo = videoFilePath != null;
+
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      reverse: true,
+                      padding: const EdgeInsets.all(16.0),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: constraints.maxHeight - 32),
+                        child: IntrinsicHeight(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Spacer(),
+                              Text(
+                                widget.question['id'].toString(),
+                                style: AppStyles.getLightStyle(color: AppColors.white.withValues(alpha: 0.18)),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                widget.question['question'],
+                                style: AppStyles.getBoldStyle(color: AppColors.white, fontSize: 24),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                widget.question['subtitle'],
+                                style: AppStyles.getLightStyle(
+                                  color: AppColors.white.withValues(alpha: 0.48),
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.white.withValues(alpha: 0.05),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: TextFormField(
+                                  controller: _textController,
+                                  onChanged: (value) {
+                                    ref
+                                        .read(onboardingStateNotifierProvider.notifier)
+                                        .updateDescriptionScreenTwo(value);
+                                  },
+                                  maxLines: 10,
+                                  maxLength: 600,
+                                  textInputAction: TextInputAction.done,
+                                  style: const TextStyle(color: AppColors.white),
+                                  decoration: InputDecoration(
+                                    hintText: widget.question['placeholder'],
+                                    hintStyle: AppStyles.getLightStyle(
+                                      color: AppColors.white.withValues(alpha: 0.16),
+                                      fontSize: 20,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(16),
+                                    counterText: '',
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Show recording UI based on state
+                              if (isRecording)
+                                RecordingInProgressWidget(
+                                  audioService: _audioService,
+                                  onStopRecording: _stopAudioRecording,
+                                )
+                              else if (recordedFilePath != null)
+                                RecordedFileWidget(
+                                  filePath: recordedFilePath,
+                                  isVideo: isVideo,
+                                  audioService: _audioService,
+                                  videoService: _videoService,
+                                  onPlay: () {
+                                    if (isVideo) {
+                                      _playVideo(recordedFilePath);
+                                    } else {
+                                      _toggleAudioPlayback(recordedFilePath);
+                                    }
+                                  },
+                                  onDelete: _deleteRecording,
+                                  onNext: widget.onNext,
+                                )
+                              else
+                                ActionButtonsWidget(
+                                  audioService: _audioService,
+                                  videoService: _videoService,
+                                  onStartAudioRecording: _startAudioRecording,
+                                  onStartVideoRecording: _startVideoRecording,
+                                  onNext: widget.onNext,
+                                  isTextNotEmpty: _textController.text.isNotEmpty,
+                                  recordedFilePath: recordedFilePath,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
         );
       },
     );
   }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.question['question'],
-            style: const TextStyle(color: AppColors.white, fontSize: 24, fontWeight: FontWeight.w600),
-          ),
-          if (widget.question['subtitle'] != null) ...[
-            const SizedBox(height: 8),
-            Text(widget.question['subtitle'], style: TextStyle(color: Colors.grey[400], fontSize: 14)),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextInputArea() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          decoration: BoxDecoration(color: Colors.grey[900], borderRadius: BorderRadius.circular(8)),
-          child: TextField(
-            controller: _textController,
-            onChanged: (value) {
-              ref.read(onboardingStateNotifierProvider.notifier).updateDescription(value);
-            },
-            maxLines: null,
-            expands: true,
-            textAlignVertical: TextAlignVertical.top,
-            style: const TextStyle(color: AppColors.white, fontSize: 16),
-            decoration: InputDecoration(
-              hintText: widget.question['placeholder'],
-              hintStyle: TextStyle(color: Colors.grey[600]),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(16),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecordingSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.grey[900], borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                _isRecordingNotifier.value = false;
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                child: const Icon(Icons.stop, color: AppColors.white, size: 20),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: CustomPaint(size: const Size(double.infinity, 40), painter: WaveformPainter()),
-            ),
-            const SizedBox(width: 12),
-            const Text('00:47', style: TextStyle(color: AppColors.white, fontSize: 14)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomActions(bool isRecording) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          _buildMicrophoneButton(isRecording),
-          const SizedBox(width: 12),
-          _buildCameraButton(),
-          const SizedBox(width: 12),
-          _buildNextButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMicrophoneButton(bool isRecording) {
-    return GestureDetector(
-      onTap: _toggleRecording,
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[800]!),
-        ),
-        child: Icon(isRecording ? Icons.stop : Icons.mic, color: AppColors.white),
-      ),
-    );
-  }
-
-  Widget _buildCameraButton() {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[800]!),
-      ),
-      child: const Icon(Icons.videocam, color: AppColors.white),
-    );
-  }
-
-  Widget _buildNextButton() {
-    return Expanded(
-      child: SizedBox(
-        height: 50,
-        child: ElevatedButton(
-          onPressed: widget.onNext,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[900],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: BorderSide(color: Colors.grey[800]!),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Next',
-                style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward, color: AppColors.white, size: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Custom Painter for Waveform
-class WaveformPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.white
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
-
-    const barCount = 40;
-    final barWidth = size.width / barCount;
-
-    for (int i = 0; i < barCount; i++) {
-      final height = (i % 3 == 0) ? size.height * 0.8 : size.height * 0.4;
-      final x = i * barWidth + barWidth / 2;
-
-      canvas.drawLine(Offset(x, size.height / 2 - height / 2), Offset(x, size.height / 2 + height / 2), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

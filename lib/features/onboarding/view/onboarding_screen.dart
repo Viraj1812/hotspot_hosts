@@ -8,6 +8,7 @@ import 'package:hotspot_hosts/features/onboarding/controller/onboarding_state_no
 import 'package:hotspot_hosts/features/onboarding/view/widgets/selection_page_widget.dart';
 import 'package:hotspot_hosts/features/onboarding/view/widgets/text_input_page_widget.dart';
 import 'package:hotspot_hosts/helpers/auto_route_navigation.dart';
+import 'package:hotspot_hosts/routes/app_router.dart';
 import 'package:hotspot_hosts/widgets/app_scaffold_with_background.dart';
 import 'package:hotspot_hosts/widgets/wavy_progress_indicator.dart';
 
@@ -43,13 +44,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         {
           "id": "01",
           "question": "What kind of hotspots do you want to host?",
-          "placeholder": "/ Start typing here",
+          "placeholder": "/ Describe your perfect hotspot",
           "type": "selection"
         },
         {
           "id": "02",
           "question": "Why do you want to host with us?",
-          "placeholder": "Start typing here",
+          "placeholder": "/ Start typing here",
           "subtitle": "Tell us about your intent and what motivates you to create experiences.",
           "type": "text_input"
         }
@@ -78,6 +79,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    } else {
+      AutoRouteNavigation.pushAndReplace(const ThankYouRoute());
     }
   }
 

@@ -35,7 +35,11 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
     state = state.copyWith(selectedExperiences: currentSelected);
   }
 
-  void updateDescription(String text) {
-    state = state.copyWith(description: text);
+  void updateDescriptionScreenOne(String text) {
+    state = state.copyWith(descriptionScreenOne: text);
+  }
+
+  void updateDescriptionScreenTwo(String text) {
+    state = state.copyWith(descriptionScreenTwo: text);
   }
 }

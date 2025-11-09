@@ -75,16 +75,6 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [bg, logo];
 }
 
-class $AssetsJsonGen {
-  const $AssetsJsonGen();
-
-  /// File path: assets/json/onboarding_questions.json
-  String get onboardingQuestions => 'assets/json/onboarding_questions.json';
-
-  /// List of all assets
-  List<String> get values => [onboardingQuestions];
-}
-
 class AppAssets {
   const AppAssets._();
 
@@ -92,7 +82,6 @@ class AppAssets {
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsJsonGen json = $AssetsJsonGen();
 }
 
 class AssetGenImage {
