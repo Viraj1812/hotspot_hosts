@@ -4,6 +4,7 @@ import 'package:hotspot_hosts/config/assets/colors.gen.dart';
 import 'package:hotspot_hosts/constants/app_strings.dart';
 import 'package:hotspot_hosts/constants/app_styles.dart';
 import 'package:hotspot_hosts/features/onboarding/controller/onboarding_state_notifier.dart';
+import 'package:hotspot_hosts/widgets/app_button.dart';
 import 'package:master_utility/master_utility.dart';
 
 class SelectionPageWidget extends ConsumerStatefulWidget {
@@ -42,17 +43,15 @@ class _SelectionPageWidgetState extends ConsumerState<SelectionPageWidget> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
-          reverse: true, // Makes content stick to bottom when keyboard is closed
+          reverse: true,
           padding: const EdgeInsets.all(16.0),
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight - 32, // Account for padding
-            ),
+            constraints: BoxConstraints(minHeight: constraints.maxHeight - 32),
             child: IntrinsicHeight(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Spacer(), // Pushes content to bottom when no keyboard
+                  const Spacer(),
                   Text(
                     widget.question['id'].toString(),
                     style: AppStyles.getLightStyle(color: AppColors.white.withValues(alpha: 0.18)),
@@ -143,7 +142,7 @@ class _SelectionPageWidgetState extends ConsumerState<SelectionPageWidget> {
                             },
                           ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                       color: AppColors.white.withValues(alpha: 0.05),
@@ -170,30 +169,10 @@ class _SelectionPageWidgetState extends ConsumerState<SelectionPageWidget> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: widget.onNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[900],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(color: Colors.grey[800]!),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'Next',
-                            style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(Icons.arrow_forward, color: AppColors.white, size: 20),
-                        ],
-                      ),
-                    ),
+                  AppButton(
+                    onPressed: widget.onNext,
+                    text: AppStrings.next,
+                    isEnabled: state.selectedExperiences.isNotEmpty,
                   ),
                 ],
               ),

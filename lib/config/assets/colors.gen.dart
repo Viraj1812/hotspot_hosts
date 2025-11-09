@@ -17,6 +17,12 @@ class AppColors {
   /// Color: #101010
   static const Color black = Color(0xFF101010);
 
+  /// Color: #222222
+  static const Color buttonShade1 = Color(0xFF222222);
+
+  /// Color: #999999
+  static const Color buttonShade2 = Color(0xFF999999);
+
   /// Color: #9196FF
   static const Color purple = Color(0xFF9196FF);
 

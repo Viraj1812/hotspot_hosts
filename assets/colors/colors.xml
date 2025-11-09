@@ -4,4 +4,9 @@
     <color name="black">#101010</color>
     <color name="purple">#9196FF</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Button Shades  -->
+    <color name="button_shade_1">#222222</color>
+    <color name="button_shade_2">#999999</color>
+
 </resources>
