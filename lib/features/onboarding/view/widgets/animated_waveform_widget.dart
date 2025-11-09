@@ -25,19 +25,17 @@ class AnimatedWaveformWidget extends StatefulWidget {
 class _AnimatedWaveformWidgetState extends State<AnimatedWaveformWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final Random _random = Random();
-  List<double> _heights = [];
+  late ValueNotifier<List<double>> _heightsNotifier;
 
   @override
   void initState() {
     super.initState();
-    _heights = List.generate(widget.barCount, (index) => _getRandomHeight());
+    _heightsNotifier = ValueNotifier<List<double>>(List.generate(widget.barCount, (index) => _getRandomHeight()));
 
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300))
       ..addListener(() {
         if (widget.isAnimating) {
-          setState(() {
-            _heights = List.generate(widget.barCount, (index) => _getRandomHeight());
-          });
+          _heightsNotifier.value = List.generate(widget.barCount, (index) => _getRandomHeight());
         }
       });
 
@@ -66,23 +64,29 @@ class _AnimatedWaveformWidgetState extends State<AnimatedWaveformWidget> with Si
   @override
   void dispose() {
     _controller.dispose();
+    _heightsNotifier.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.barCount,
-        (index) => AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          width: widget.barWidth,
-          height: _heights[index],
-          margin: EdgeInsets.symmetric(horizontal: widget.spacing),
-          decoration: BoxDecoration(color: widget.color, borderRadius: BorderRadius.circular(2)),
-        ),
-      ),
+    return ValueListenableBuilder<List<double>>(
+      valueListenable: _heightsNotifier,
+      builder: (context, heights, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            widget.barCount,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              width: widget.barWidth,
+              height: heights[index],
+              margin: EdgeInsets.symmetric(horizontal: widget.spacing),
+              decoration: BoxDecoration(color: widget.color, borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+        );
+      },
     );
   }
 }
